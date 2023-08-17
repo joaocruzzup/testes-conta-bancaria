@@ -1,6 +1,7 @@
 package com.factory.contabancaria.controller;
 
 import com.factory.contabancaria.model.ContasModel;
+import com.factory.contabancaria.model.dto.ContaDTOPostPut;
 import com.factory.contabancaria.model.factory.ContaFactory;
 import com.factory.contabancaria.repository.ContasRepository;
 import com.factory.contabancaria.service.ContasService;
@@ -29,7 +30,7 @@ public class ContasController {
         return ResponseEntity.ok(contasService.listarContas());
     }
 
-    @GetMapping(path = "/{id}")
+    @GetMapping(path = "/id/{id}")
     public ResponseEntity<?> exibeUmaContaPeloId(@PathVariable Long id){
         Optional<ContasModel> contaOpcional = contasService.exibeContaPorId(id);
         if (contaOpcional.isEmpty()){
@@ -38,17 +39,22 @@ public class ContasController {
         return ResponseEntity.ok(contaOpcional.get());
     }
 
+    @GetMapping(path = "/{nomeDoUsuario}")
+    public ResponseEntity<?> exibeUmaContaPeloNome(@PathVariable String nomeDoUsuario) throws Exception {
+        return ResponseEntity.ok(contasService.exibeContaPorNome(nomeDoUsuario));
+    }
+
     //POST - Cria uma nova conta dentro do banco
     @PostMapping
-    public ResponseEntity<ContasModel> cadastrarConta(@RequestBody ContasModel contasModel, ContaFactory contaFactory){
-        ContasModel novaConta = contasService.cadastrar(contasModel, contaFactory);
+    public ResponseEntity<ContaDTOPostPut> cadastrarConta(@RequestBody ContasModel contasModel, ContaFactory contaFactory){
+        ContaDTOPostPut novaConta = contasService.cadastrar(contasModel, contaFactory);
         return new ResponseEntity<>(novaConta, HttpStatus.CREATED);
     }
 
     //PUT - Alterar uma conta já existente dentro do banco
     @PutMapping(path = "/{id}")
-    public ContasModel atualizarConta(@PathVariable Long id, @RequestBody ContasModel contasModel){
-        return contasService.alterar(id, contasModel);
+    public ContaDTOPostPut atualizarConta(@PathVariable Long id, @RequestBody ContasModel contasModel, ContaFactory contaFactory){
+        return contasService.alterar(id, contasModel, contaFactory);
     }
 
     //DELETE - Deleta uma conta já existente dentro do banco
