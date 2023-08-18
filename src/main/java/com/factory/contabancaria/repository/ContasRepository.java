@@ -10,5 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface ContasRepository extends JpaRepository<ContasModel, Long> {
-    List<ContasModel> findByNomeDoUsuario( String nomeDoUsuario);
+    List<ContasModel> findByNomeDoUsuario(String nomeDoUsuario);
+    Optional<ContasModel> findById(Long id);
 }
