@@ -32,6 +32,7 @@ public class ContasModel {
     private BigDecimal ValorFornecido;
     @Column(length = 20, nullable = false)
     private String tipoServico;
+
     private BigDecimal valorFinal;
 
 }

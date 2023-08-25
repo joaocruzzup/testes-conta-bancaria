@@ -1,6 +1,7 @@
 package com.factory.contabancaria.controller;
 
 import com.factory.contabancaria.model.ContasModel;
+import com.factory.contabancaria.model.dto.ContaDTOGet;
 import com.factory.contabancaria.model.dto.ContaDTOInformacoes;
 import com.factory.contabancaria.model.dto.ContaDTOPostPut;
 import com.factory.contabancaria.model.dto.ContaDTOTransacao;
@@ -28,13 +29,13 @@ public class ContasController {
     //requisições
     //GET - Pegar as informações do nosso banco
     @GetMapping
-    public ResponseEntity<List<ContasModel>> listarTodasContas(){
+    public ResponseEntity<List<ContaDTOGet>> listarTodasContas(){
         return ResponseEntity.ok(contasService.listarContas());
     }
 
     @GetMapping(path = "/id/{id}")
     public ResponseEntity<?> exibeUmaContaPeloId(@PathVariable Long id){
-        Optional<ContasModel> contaOpcional = contasService.exibeContaPorId(id);
+        Optional<ContaDTOGet> contaOpcional = contasService.exibeContaPorId(id);
         if (contaOpcional.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Conta não encontrada, tente novamente!");
         }

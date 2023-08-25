@@ -30,12 +30,24 @@ public class ContasService {
     TransacaoService transacaoService;
 
     //métodos
-    public List<ContasModel> listarContas(){
-        return contasRepository.findAll();
+    public List<ContaDTOGet> listarContas(){
+        List<ContasModel> listaContas = contasRepository.findAll();
+        List<ContaDTOGet> listaContasDTO = new ArrayList<>();
+        for (ContasModel conta:listaContas) {
+            ContaDTOGet contaDTO = contaMapper.toContaDtoGet(conta);
+            listaContasDTO.add(contaDTO);
+        }
+        return listaContasDTO;
     }
 
-    public Optional<ContasModel> exibeContaPorId(Long id){
-        return contasRepository.findById(id);
+    public Optional<ContaDTOGet> exibeContaPorId(Long id){
+        Optional<ContasModel> contasModelOptional = contasRepository.findById(id);
+        if (!contasModelOptional.isPresent()) {
+            throw new ContaNaoEncontradaException("Erro: Conta de ID " + id + " não encontrada");
+        }
+        ContasModel contasModel = contasModelOptional.get();
+        ContaDTOGet contaDTOGet = contaMapper.toContaDtoGet(contasModel);
+        return Optional.ofNullable(contaDTOGet);
     }
 
     public List<ContaDTOGet> exibeContaPorNome(String nomeDoUsuario) {
@@ -64,7 +76,8 @@ public class ContasService {
 
     public ContaDTOInformacoes alterarInformacoesConta(Long id, ContaDTOInformacoes contaDTOInformacoes, ContaFactory contaFactory) {
 
-        Optional<ContasModel> contasModelOptional = exibeContaPorId(id);
+        Optional<ContasModel> contasModelOptional = contasRepository.findById(id);
+
         if (!contasModelOptional.isPresent()){
             throw new ContaNaoEncontradaException("Erro: Conta de ID " + id + " não encontrada");
         }
