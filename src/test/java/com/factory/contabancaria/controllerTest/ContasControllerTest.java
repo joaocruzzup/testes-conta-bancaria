@@ -95,11 +95,12 @@ public class ContasControllerTest {
 
         Long idConta = 1L;
 
-        when(contasService.exibeContaPorId(idConta)).thenThrow(new ContaNaoEncontradaException("Erro: Conta de ID " + idConta + " não encontrada"));
+        when(contasService.exibeContaPorId(idConta)).thenThrow(new ContaNaoEncontradaException("Conta não encontrada, tente novamente!"));
 
         mockMvc.perform(get("/api/contas/id/{id}", idConta)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
+                .andExpect(content().string("Conta não encontrada, tente novamente!"))
                 .andDo(print());
     }
 
